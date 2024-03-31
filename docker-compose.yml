@@ -1,0 +1,26 @@
+services:
+  api_gateway:
+    build: ./http-api-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./http-api-gateway/src:/usr/src/app/src
+    command: pnpm run start:dev
+    environment:
+      - PORT=3000
+    depends_on:
+      - nats
+  users:
+    build: ./users-microservice
+    volumes:
+      - ./users-microservice/src:/usr/src/app/src
+    command: pnpm run start:dev
+  payments:
+    build: ./payments-microservice
+    volumes:
+      - ./payments-microservice/src:/usr/src/app/src
+    command: pnpm run start:dev
+  nats:
+    image: nats:2.10.12
+    ports:
+      - "4222:4222"
